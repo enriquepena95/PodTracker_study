@@ -44,6 +44,9 @@ from sklearn.linear_model import LinearRegression
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
+
+os.environ["QT_QPA_PLATFORM"] = "offscreen"
+
 # Set base folder
 base_folder = os.path.expanduser("~/PodTracker_study")
 

@@ -99,6 +99,20 @@ if model_exists:
     print("Skipping training phase and proceeding directly to evaluation")
 else:
     print("Final model not found. Will proceed with training.")
+    
+    
+# Load the model for inference (whether we just trained it or it already existed)
+def load_json_arr(json_path):
+    lines = []
+    try:
+        with open(json_path, 'r') as f:
+            for line in f:
+                lines.append(json.loads(line))
+    except Exception as e:
+        print(f"Error loading metrics file: {e}")
+        return []
+    return lines
+
 
 # Prepare Training Configuration
 def prepare_cfg(num_epochs=20, debug=True):
@@ -293,18 +307,6 @@ if not model_exists:
             print("No metrics data found for plotting")
     except Exception as e:
         print(f"Error generating loss plot: {e}")
-
-# Load the model for inference (whether we just trained it or it already existed)
-def load_json_arr(json_path):
-    lines = []
-    try:
-        with open(json_path, 'r') as f:
-            for line in f:
-                lines.append(json.loads(line))
-    except Exception as e:
-        print(f"Error loading metrics file: {e}")
-        return []
-    return lines
 
 # Configure model for inference
 print("Configuring model for evaluation...")
