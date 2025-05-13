@@ -167,6 +167,14 @@ for variety in varieties:
         print(data_path)
         output_path = os.path.join(results_folder, "tables", "varieties", variety, rep)
         plot_path = os.path.join(results_folder, "plots", "varieties", variety, rep)
+        
+        
+        # Check if output file already exists, skip if it does
+        output_file = os.path.join(output_path, f'grades_podtracker_{rep}.csv')
+        if os.path.exists(output_file):
+            print(f"Output file {output_file} already exists. Skipping to next iteration.")
+            continue
+        
         if not os.path.exists(output_path):
             os.makedirs(output_path)
             
@@ -637,7 +645,7 @@ for cls in classes:
     # Save the plot
     plt.savefig(os.path.join(results_folder, f'plots/{cls}_barplot.png'), dpi=400)
     plt.savefig(os.path.join(results_folder, f'plots/{cls}_barplot.svg'), dpi=400, format='svg')
-    plt.show()
+    #plt.show()
     plt.clf()
     plt.close()
     
@@ -667,7 +675,7 @@ plt.tight_layout()
 plt.savefig(os.path.join(results_folder, 'plots/predicted_grades_by_tracker.png'), dpi=300, bbox_inches='tight')
 plt.savefig(os.path.join(results_folder, 'plots/predicted_grades_by_tracker.svg'), dpi=400, bbox_inches='tight', format='svg')
 # Show the plot
-plt.show()
+#plt.show()
 
 # Compute grade standard deviation
 

@@ -316,44 +316,61 @@ cfg.MODEL.DEVICE = 'cpu'  # Use CPU for inference to avoid potential CUDA issues
 
 predictor = DefaultPredictor(cfg)
 
-# Get Average Precision Scores - This runs regardless of whether we trained or loaded a model
-print("Calculating AP scores...")
-from detectron2.evaluation import COCOEvaluator, inference_on_dataset
-from detectron2.data import build_detection_test_loader
+# Get Average Precision Scores - Skip if results already exist
+print("Checking for existing AP scores...")
 
-try:
-    evaluator = COCOEvaluator("my_pod_dataset_test", cfg, False, output_dir=os.path.join(models_folder, "output/"))
-    test_loader = build_detection_test_loader(cfg, "my_pod_dataset_test")
-    print(f"Running inference on test dataset...")
-    res = inference_on_dataset(predictor.model, test_loader, evaluator)
-    print("Inference completed.")
+# Define the path to the AP scores file
+ap_scores_path = os.path.join(tables_folder, "ap_scores.csv")
 
-    # Create a list to hold all metrics data
-    data = []
-
-    # Process each task type (bbox, segm, etc.)
-    for task, metrics in res.items():
-        for metric, value in metrics.items():
-            data.append({
-                'task': task,
-                'metric': metric, 
-                'value': value
-            })
+# Check if the file already exists
+if os.path.exists(ap_scores_path):
+    print(f"AP scores file {ap_scores_path} already exists. Skipping evaluation.")
     
-    # Convert to DataFrame and save
-    df = pd.DataFrame(data)
-    ap_scores_path = os.path.join(tables_folder, "ap_scores.csv")
-    df.to_csv(ap_scores_path, index=False)
-    print(f"AP scores successfully saved to {ap_scores_path}")
-    
-    # Also print the scores to console
-    print("\nAP Scores Summary:")
-    for task, metrics in res.items():
-        print(f"\n{task} metrics:")
-        for metric, value in metrics.items():
-            print(f"  {metric}: {value}")
-            
-except Exception as e:
-    print(f"Error during AP score calculation: {e}")
-    
+    # Optionally, you can read and display the existing scores
+    try:
+        existing_scores = pd.read_csv(ap_scores_path)
+        print("\nExisting AP Scores Summary:")
+        for task in existing_scores['task'].unique():
+            task_data = existing_scores[existing_scores['task'] == task]
+            print(f"\n{task} metrics:")
+            for _, row in task_data.iterrows():
+                print(f"  {row['metric']}: {row['value']}")
+    except Exception as e:
+        print(f"Error reading existing AP scores: {e}")
+else:
+    print("No existing AP scores found. Running evaluation...")
+    from detectron2.evaluation import COCOEvaluator, inference_on_dataset
+    from detectron2.data import build_detection_test_loader
+    try:
+        evaluator = COCOEvaluator("my_pod_dataset_test", cfg, False, output_dir=os.path.join(models_folder, "output/"))
+        test_loader = build_detection_test_loader(cfg, "my_pod_dataset_test")
+        print(f"Running inference on test dataset...")
+        res = inference_on_dataset(predictor.model, test_loader, evaluator)
+        print("Inference completed.")
+        # Create a list to hold all metrics data
+        data = []
+        # Process each task type (bbox, segm, etc.)
+        for task, metrics in res.items():
+            for metric, value in metrics.items():
+                data.append({
+                    'task': task,
+                    'metric': metric, 
+                    'value': value
+                })
+        
+        # Convert to DataFrame and save
+        df = pd.DataFrame(data)
+        df.to_csv(ap_scores_path, index=False)
+        print(f"AP scores successfully saved to {ap_scores_path}")
+        
+        # Also print the scores to console
+        print("\nAP Scores Summary:")
+        for task, metrics in res.items():
+            print(f"\n{task} metrics:")
+            for metric, value in metrics.items():
+                print(f"  {metric}: {value}")
+                
+    except Exception as e:
+        print(f"Error during AP score calculation: {e}")
+        
 print("Script completed.")

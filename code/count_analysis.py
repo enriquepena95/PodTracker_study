@@ -172,6 +172,15 @@ for count_ in counts:
         print(data_path)
         output_path = os.path.join(results_folder, "tables", "counts", count_, rep)
         plot_path = os.path.join(results_folder, "plots", "counts", count_, rep)
+        
+        # Check if output file already exists, skip if it does
+        output_file = os.path.join(output_path, f'{output_path}/podtracker_{rep}.csv')
+        if os.path.exists(output_file):
+            print(f"Output file {output_file} already exists. Skipping to next iteration.")
+            continue
+        
+        
+        
         if not os.path.exists(output_path):
             os.makedirs(output_path)
             
@@ -645,7 +654,7 @@ plt.legend()
 plt.tight_layout()
 plt.savefig(os.path.join(results_folder, 'plots/counts_lineplot.png'), dpi=400)
 #plt.savefig(os.path.join(results_folder, 'plots/counts_lineplot.svg'), dpi=400, format='svg')
-plt.show()
+#plt.show()
 
 # Plot with adjusted predictions
 
@@ -716,4 +725,4 @@ plt.legend()
 plt.tight_layout()
 plt.savefig(os.path.join(results_folder, 'plots/adjusted_predictions_plot.png'), dpi=400)
 #plt.savefig('/media/enrique/scanner_data/analysis/plots/adjusted_predictions_plot.svg', dpi=400, format='svg')
-plt.show()
+#plt.show()
