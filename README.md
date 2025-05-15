@@ -92,7 +92,7 @@ conda activate ml_env
 
 ### 5. Download and Extract Data
 
-1. Download the dataset from Dryad: [DOI: 10.5061/dryad.v41ns1s7p](https://doi.org/10.5061/dryad.v41ns1s7p)
+1. Download the dataset from Dryad: [[DOI: 10.5061/dryad.v41ns1s7p](https://doi.org/10.5061/dryad.v41ns1s7p)](http://datadryad.org/share/WteqhMqjfH4gURPfTDwTjmleMMs9-kJMabYQjO13hiU)
 
 2. Extract the 7zip archive to the PodTracker_study directory:
    ```bash
