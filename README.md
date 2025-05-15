@@ -78,7 +78,7 @@ def _cosine_distance(a, b, data_is_normalized=False):
 2. In `~/PodTracker_study/DeepSortMask/deep_sort/preprocessing.py`:
    - Change line 41: replace `dtype=np.float` with `dtype=np.float64`
 
-3. In `~/PodTracker_study/DeepSortMask/deep_sort/linear_assignment.py`:
+3. In `~/PodTracker_study/DeepSortMask/toolsTracker/generate_detections.py`:
    - Change line 63: replace `dtype=np.float` with `dtype=np.float64`
 
 ### 4. Create and Activate Conda Environment
